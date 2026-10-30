@@ -1,0 +1,585 @@
+
+/* ==========================================
+   REDCSS COMMUNITY
+   3D NEON ADMIN DASHBOARD
+========================================== */
+
+:root {
+  --red: #ff253f;
+  --red-glow: rgba(255, 37, 63, .35);
+  --bg: #08090e;
+  --panel: rgba(20, 22, 32, .78);
+  --border: rgba(255,255,255,.09);
+  --text: #f4f4f8;
+  --muted: #9294a5;
+}
+
+.admin-body {
+  background:
+    radial-gradient(ellipse at 15% 10%, rgba(255,25,55,.13), transparent 35%),
+    radial-gradient(ellipse at 90% 85%, rgba(100,30,100,.12), transparent 35%),
+    var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-family: "Poppins", Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+.admin-body * {
+  box-sizing: border-box;
+}
+
+.admin-body button,
+.admin-body input,
+.admin-body textarea {
+  font: inherit;
+}
+
+.admin-body button {
+  cursor: pointer;
+}
+
+/* LOGIN */
+
+.login-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255,37,63,.13), transparent 45%);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 430px;
+  padding: 38px;
+  border: 1px solid var(--border);
+  border-radius: 25px;
+  background: linear-gradient(145deg, rgba(32,34,47,.9), rgba(12,13,20,.92));
+  box-shadow: 0 30px 90px #0009, 0 0 45px rgba(255,37,63,.09);
+  backdrop-filter: blur(25px);
+  transform: perspective(1000px) rotateX(2deg);
+  animation: loginEnter .7s ease both;
+}
+
+@keyframes loginEnter {
+  from { opacity: 0; transform: translateY(25px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.admin-logo {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  font-size: 27px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.admin-logo span,
+.admin-eyebrow,
+.login-card h1 span {
+  color: var(--red);
+}
+
+.login-icon {
+  font-size: 38px;
+  margin-top: 35px;
+}
+
+.admin-eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 800;
+}
+
+.login-card h1 {
+  font-size: 36px;
+  line-height: 1.15;
+  margin: 12px 0;
+}
+
+.login-description {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 28px;
+}
+
+.login-card label,
+.admin-form label {
+  display: block;
+  font-size: 12px;
+  color: #c7c7d2;
+  margin: 17px 0 8px;
+}
+
+.login-card input,
+.admin-form input,
+.admin-form textarea {
+  width: 100%;
+  background: rgba(0,0,0,.3);
+  color: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  outline: none;
+  transition: .25s;
+}
+
+.login-card input:focus,
+.admin-form input:focus,
+.admin-form textarea:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 18px var(--red-glow);
+}
+
+.admin-primary-btn {
+  width: 100%;
+  margin-top: 25px;
+  padding: 15px;
+  border: 0;
+  border-radius: 11px;
+  color: white;
+  font-weight: 800;
+  background: linear-gradient(110deg, #d80d2c, #ff4255);
+  box-shadow: 0 8px 25px var(--red-glow);
+  transition: .3s;
+}
+
+.admin-primary-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px var(--red-glow);
+}
+
+.admin-primary-btn span {
+  float: right;
+}
+
+.admin-status {
+  color: #ff697b;
+  font-size: 12px;
+  margin-top: 15px;
+}
+
+.back-website {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+}
+
+/* LAYOUT */
+
+.admin-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 255px minmax(0, 1fr);
+}
+
+.admin-layout[hidden],
+.login-screen[hidden],
+.admin-view[hidden] {
+  display: none !important;
+}
+
+.admin-sidebar {
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 30px 20px;
+  background: rgba(13,14,21,.92);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(20px);
+}
+
+.sidebar-label {
+  color: #666979;
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin: 48px 10px 15px;
+}
+
+.admin-nav {
+  display: grid;
+  gap: 9px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: #aaaaba;
+  text-align: left;
+  transition: .25s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  color: white;
+  background: linear-gradient(100deg, rgba(255,37,63,.18), rgba(255,37,63,.035));
+  border-color: rgba(255,37,63,.25);
+  box-shadow: inset 3px 0 var(--red);
+}
+
+.nav-item b {
+  margin-left: auto;
+  color: white;
+  font-size: 10px;
+  background: var(--red);
+  padding: 3px 7px;
+  border-radius: 20px;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+}
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 0;
+  border-top: 1px solid var(--border);
+}
+
+.profile-avatar {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff253f, #761022);
+  font-weight: 900;
+}
+
+.admin-profile strong,
+.admin-profile small {
+  display: block;
+}
+
+.admin-profile strong {
+  font-size: 12px;
+}
+
+.admin-profile small {
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+.logout-btn,
+.website-link {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  background: transparent;
+  color: #ff6576;
+  text-align: left;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+/* MAIN */
+
+.admin-main {
+  min-width: 0;
+  padding: 35px;
+}
+
+.admin-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 35px;
+}
+
+.admin-topbar h2 {
+  font-size: 27px;
+  margin: 7px 0 0;
+}
+
+.refresh-btn {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+  color: white;
+  padding: 11px 17px;
+}
+
+.refresh-btn:hover {
+  border-color: var(--red);
+}
+
+.welcome-banner {
+  padding: 32px;
+  border: 1px solid rgba(255,37,63,.2);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 90% 20%, rgba(255,37,63,.2), transparent 45%),
+    linear-gradient(120deg, #1a1019, #11121b);
+  box-shadow: 0 20px 50px #0005;
+}
+
+.welcome-banner h1 {
+  font-size: clamp(24px, 4vw, 39px);
+  margin: 12px 0;
+}
+
+.welcome-banner h1 span {
+  color: var(--red);
+}
+
+.welcome-banner p:last-child {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* 3D STAT CARDS */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 18px;
+  margin: 25px 0;
+}
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+  padding: 23px;
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  background: linear-gradient(145deg, rgba(34,35,49,.95), rgba(15,16,24,.95));
+  box-shadow: 0 15px 35px #0005;
+  transform-style: preserve-3d;
+  transition: transform .3s, border-color .3s, box-shadow .3s;
+}
+
+.stat-card:hover {
+  transform: perspective(800px) translateY(-7px) rotateX(4deg) rotateY(-3deg);
+  border-color: rgba(255,37,63,.55);
+  box-shadow: 0 22px 45px #0008, 0 0 25px rgba(255,37,63,.1);
+}
+
+.stat-card::after {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  right: -35px;
+  top: -35px;
+  border-radius: 50%;
+  background: var(--red);
+  filter: blur(65px);
+  opacity: .25;
+}
+
+.stat-card small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 32px;
+  margin: 14px 0 5px;
+}
+
+.stat-card span {
+  color: #ff697b;
+  font-size: 11px;
+}
+
+/* PANELS */
+
+.admin-panel,
+.admin-form {
+  min-width: 0;
+  padding: 24px;
+  margin-bottom: 22px;
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  background: linear-gradient(145deg, rgba(28,29,42,.9), rgba(14,15,22,.95));
+  box-shadow: 0 15px 40px #0004;
+}
+
+.admin-panel h3,
+.admin-form h3 {
+  margin: 0 0 20px;
+  font-size: 17px;
+}
+
+.admin-panel p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.admin-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  font-size: 12px;
+}
+
+.admin-table th {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.admin-table td {
+  color: #e2e2e9;
+}
+
+/* FORMS AND BUTTONS */
+
+.admin-form button,
+.admin-action-btn {
+  padding: 11px 17px;
+  border: 0;
+  border-radius: 9px;
+  background: linear-gradient(110deg, #d80d2c, #ff4255);
+  color: white;
+  font-weight: 700;
+  transition: .25s;
+}
+
+.admin-form button:hover,
+.admin-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--red-glow);
+}
+
+.admin-empty {
+  padding: 30px;
+  color: var(--muted);
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+}
+
+/* ANIMATIONS */
+
+@keyframes glowPulse {
+  0%,100% { box-shadow: 0 0 10px rgba(255,37,63,.08); }
+  50% { box-shadow: 0 0 24px rgba(255,37,63,.2); }
+}
+
+.stat-card {
+  animation: glowPulse 4s infinite;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1050px) {
+  .stats-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:700px) {
+  .admin-layout {
+    display: block;
+  }
+
+  .admin-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    padding: 18px;
+  }
+
+  .sidebar-label,
+  .sidebar-bottom,
+  .admin-profile {
+    display: none;
+  }
+
+  .admin-nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 7px;
+    margin-top: 17px;
+    padding-bottom: 5px;
+  }
+
+  .nav-item {
+    width: auto;
+    flex-shrink: 0;
+    padding: 11px 13px;
+    font-size: 12px;
+  }
+
+  .nav-item b {
+    display: none;
+  }
+
+  .admin-main {
+    padding: 20px 14px;
+  }
+
+  .admin-topbar {
+    margin-bottom: 20px;
+  }
+
+  .admin-topbar h2 {
+    font-size: 22px;
+  }
+
+  .welcome-banner {
+    padding: 23px;
+  }
+
+  .stats-grid {
+    gap: 10px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-card strong {
+    font-size: 25px;
+  }
+
+  .admin-panel,
+  .admin-form {
+    padding: 17px;
+  }
+
+  .login-card {
+    padding: 27px 22px;
+  }
+}
+
+@media(max-width:360px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+        }
+  
