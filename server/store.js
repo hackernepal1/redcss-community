@@ -1,8 +1,9 @@
-
 const fs = require('fs');
 const path = require('path');
 
 const file = path.join(__dirname, '..', 'data', 'db.json');
+
+/* DEFAULT DATABASE */
 
 const seed = {
   posts: [
@@ -47,6 +48,7 @@ const seed = {
       content: 'Nmap helps administrators discover hosts and services on networks they are authorized to assess.'
     }
   ],
+
   courses: [
     {
       id: 'regular-practical',
@@ -58,28 +60,112 @@ const seed = {
         'Burp Suite and web security basics',
         'Cybersecurity fundamentals',
         'Practical assessment and responsible reporting'
-      ]
+      ],
+      type: 'paid',
+      active: true
     }
   ],
-  messages: []
+
+  messages: [],
+  settings: {},
+  sections: [],
+  products: [],
+  services: [],
+  profiles: [],
+  labs: [],
+  banners: []
 };
+
+/* CREATE SAFE DEFAULT COPY */
+
+function createDefaultData() {
+  return JSON.parse(JSON.stringify(seed));
+}
+
+/* READ DATABASE */
 
 function read() {
   if (!fs.existsSync(file)) {
-    write(seed);
+    const initialData = createDefaultData();
+    write(initialData);
+    return initialData;
   }
 
   try {
-    return JSON.parse(fs.readFileSync(file, 'utf8'));
+    const savedData = JSON.parse(
+      fs.readFileSync(file, 'utf8')
+    );
+
+    if (
+      !savedData ||
+      typeof savedData !== 'object' ||
+      Array.isArray(savedData)
+    ) {
+      throw new Error('Invalid database format');
+    }
+
+    const defaults = createDefaultData();
+
+    // Add missing fields without deleting existing data.
+    Object.keys(defaults).forEach(key => {
+      if (
+        !Object.prototype.hasOwnProperty.call(savedData, key) ||
+        savedData[key] === undefined ||
+        savedData[key] === null
+      ) {
+        savedData[key] = defaults[key];
+      }
+    });
+
+    return savedData;
+
   } catch (error) {
-    write(seed);
-    return JSON.parse(JSON.stringify(seed));
+    console.error('Database read error:', error.message);
+
+    // Keep a backup of corrupted database before recovery.
+    try {
+      fs.copyFileSync(
+        file,
+        file + '.corrupt-backup'
+      );
+    } catch (backupError) {
+      console.error('Database backup failed:', backupError.message);
+    }
+
+    const recoveredData = createDefaultData();
+    write(recoveredData);
+
+    return recoveredData;
   }
 }
 
+/* WRITE DATABASE */
+
 function write(data) {
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+  if (
+    !data ||
+    typeof data !== 'object' ||
+    Array.isArray(data)
+  ) {
+    throw new Error('Invalid database data.');
+  }
+
+  fs.mkdirSync(path.dirname(file), {
+    recursive: true
+  });
+
+  const tempFile = file + '.tmp';
+
+  fs.writeFileSync(
+    tempFile,
+    JSON.stringify(data, null, 2),
+    'utf8'
+  );
+
+  fs.renameSync(tempFile, file);
 }
 
-module.exports = { read, write };
+module.exports = {
+  read,
+  write
+};
