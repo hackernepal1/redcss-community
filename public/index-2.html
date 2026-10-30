@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#08090d">
+  <meta name="description" content="REDCSS Community — ethical cybersecurity learning, practical labs, security awareness and community.">
+  <title>REDCSS Community | Learn. Practice. Defend.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    :root{--redcss-bg:#08090d;--redcss-panel:#12141c;--redcss-line:rgba(255,255,255,.1);--redcss-red:#ff304f;--redcss-text:#f5f5f7;--redcss-muted:#a4a7b4}
+    html{scroll-behavior:smooth;scroll-padding-top:90px}
+    body{background:var(--redcss-bg);color:var(--redcss-text);font-family:Manrope,Arial,sans-serif}
+    a{color:inherit}
+    .site-header{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);background:rgba(8,9,13,.88);border-bottom:1px solid var(--redcss-line)}
+    .header-inner{width:min(1180px,92%);margin:auto;min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;letter-spacing:1.5px}
+    .brand-mark{width:39px;height:39px;display:grid;place-items:center;border:1px solid rgba(255,48,79,.55);border-radius:12px;color:var(--redcss-red);box-shadow:0 0 25px rgba(255,48,79,.14)}
+    .brand-mark svg{width:25px;height:25px}
+    .main-nav{display:flex;align-items:center;gap:22px}
+    .main-nav a{text-decoration:none;color:#c9cbd4;font-size:13px}
+    .main-nav a:hover{color:#fff}
+    .menu-toggle{display:none;background:transparent;color:white;border:1px solid var(--redcss-line);border-radius:8px;padding:8px 11px}
+    .container{width:min(1180px,92%);margin:auto}
+    .hero{padding:88px 0 70px;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:45px;min-height:570px}
+    .eyebrow,.section-kicker{font:12px 'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase;color:var(--redcss-red)}
+    .hero h1{font-size:clamp(42px,6vw,72px);line-height:1.04;letter-spacing:-3px;margin:18px 0}
+    .hero h1 span{color:var(--redcss-red)}
+    .hero-copy{max-width:580px;color:var(--redcss-muted);line-height:1.8}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 19px;border-radius:9px;text-decoration:none;font-weight:800;font-size:13px;border:1px solid var(--redcss-line)}
+    .btn-primary{background:var(--redcss-red);color:white;border-color:var(--redcss-red)}
+    .btn-secondary{background:rgba(255,255,255,.04)}
+    .hero-visual{min-height:380px;display:grid;place-items:center;position:relative;perspective:900px}
+    .hero-orbit{position:absolute;width:min(360px,85vw);aspect-ratio:1;border:1px solid rgba(255,48,79,.3);border-radius:50%;box-shadow:0 0 60px rgba(255,48,79,.1),inset 0 0 45px rgba(255,48,79,.06);animation:orbit 18s linear infinite}
+    .hero-orbit:before,.hero-orbit:after{content:"";position:absolute;inset:22px;border:1px dashed rgba(255,255,255,.13);border-radius:50%}
+    .hero-orbit:after{inset:55px;border-color:rgba(255,48,79,.2)}
+    .hero-shield{position:relative;z-index:1;width:170px;height:190px;display:grid;place-items:center;color:#ff405c;filter:drop-shadow(0 0 28px rgba(255,48,79,.42));animation:float 4s ease-in-out infinite}
+    .hero-shield svg{width:100%;height:100%}
+    .float-tag{position:absolute;padding:9px 12px;border:1px solid var(--redcss-line);background:rgba(18,20,28,.82);border-radius:9px;color:#ddd;font:11px 'DM Mono',monospace;box-shadow:0 10px 30px #0005}
+    .tag-one{top:16%;left:0}.tag-two{right:0;top:30%}.tag-three{bottom:13%;left:12%}
+    @keyframes float{50%{transform:translateY(-13px) rotateY(8deg)}}
+    @keyframes orbit{to{transform:rotate(360deg)}}
+    .ticker{overflow:hidden;border-block:1px solid var(--redcss-line);padding:15px 0;color:#bfc1ca;font:11px 'DM Mono',monospace;letter-spacing:2px;white-space:nowrap}
+    .ticker span{display:inline-block;padding-left:100%;animation:marquee 24s linear infinite}
+    @keyframes marquee{to{transform:translateX(-100%)}}
+    .section{padding:78px 0}
+    .section-heading{max-width:700px;margin-bottom:28px}
+    .section-heading h2{font-size:clamp(28px,4vw,43px);letter-spacing:-1.5px;margin:10px 0}
+    .section-heading p,.section-copy{color:var(--redcss-muted);line-height:1.8}
+    .about-grid,.community-grid{display:grid;grid-template-columns:1fr 1fr;gap:35px;align-items:center}
+    .stats-grid,.card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .stat-card,.content-card,.article-card,.dynamic-card{background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));border:1px solid var(--redcss-line);border-radius:15px;padding:22px;box-shadow:0 15px 40px rgba(0,0,0,.15);transition:transform .25s,border-color .25s}
+    .content-card:hover,.article-card:hover,.dynamic-card:hover{transform:translateY(-5px);border-color:rgba(255,48,79,.5)}
+    .stat-card strong{display:block;font-size:30px;color:#fff}.stat-card span{font-size:12px;color:var(--redcss-muted)}
+    .content-card h3,.article-card h3,.dynamic-card h3{margin:10px 0;font-size:18px}
+    .content-card p,.article-card p,.dynamic-card p{color:var(--redcss-muted);font-size:14px;line-height:1.7}
+    .card-icon{font-size:23px;color:var(--redcss-red)}
+    .featured-course{padding:30px;border-radius:18px;border:1px solid rgba(255,48,79,.35);background:radial-gradient(circle at 90% 10%,rgba(255,48,79,.17),transparent 38%),#13131b}
+    .featured-course h3{font-size:25px;margin:10px 0}
+    .article-meta{display:flex;justify-content:space-between;gap:10px;color:var(--redcss-red);font:10px 'DM Mono',monospace;text-transform:uppercase}
+    .read-link{display:inline-block;margin-top:12px;color:#ff6479;text-decoration:none;font:11px 'DM Mono',monospace}
+    .dynamic-card img{width:100%;max-height:190px;object-fit:cover;border-radius:10px;margin-bottom:12px}
+    .dynamic-card .pill{display:inline-block;padding:5px 8px;background:rgba(255,48,79,.12);border:1px solid rgba(255,48,79,.25);border-radius:99px;color:#ff8495;font:10px 'DM Mono',monospace}
+    .dynamic-card a{display:inline-block;margin-top:12px;color:#ff7185;text-decoration:none;font-weight:700;font-size:13px}
+    .contact-wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:35px}
+    .contact-form{display:grid;gap:12px}
+    .contact-form input,.contact-form textarea{width:100%;padding:13px;border:1px solid var(--redcss-line);border-radius:9px;background:#11131a;color:white;font:inherit}
+    .contact-form textarea{min-height:130px}
+    .contact-form button{justify-self:start;border:0;cursor:pointer}
+    .site-footer{padding:30px 0;border-top:1px solid var(--redcss-line);color:var(--redcss-muted);font-size:12px}
+    .footer-inner{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+    .dynamic-empty{color:var(--redcss-muted);padding:15px;border:1px dashed var(--redcss-line);border-radius:12px}
+    @media(max-width:850px){.hero{grid-template-columns:1fr;padding-top:60px}.hero-visual{min-height:330px}.about-grid,.community-grid,.contact-wrap{grid-template-columns:1fr}.stats-grid,.card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:600px){.header-inner{min-height:66px}.menu-toggle{display:block}.main-nav{display:none;position:absolute;top:66px;left:0;right:0;padding:18px 5%;background:#0c0d13;border-bottom:1px solid var(--redcss-line);flex-direction:column;align-items:flex-start}.main-nav.open{display:flex}.hero{padding:55px 0 45px;min-height:auto}.hero h1{letter-spacing:-2px}.hero-visual{min-height:290px}.hero-shield{width:135px;height:155px}.hero-orbit{width:270px}.float-tag{font-size:9px}.section{padding:55px 0}.stats-grid,.card-grid{grid-template-columns:1fr}.featured-course{padding:22px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home" aria-label="REDCSS Community home">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 20 5v6c0 5-3.4 9-8 11-4.6-2-8-6-8-11V5l8-3Z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg></span>
+        <span>RED<span style="color:#ff304f">CSS</span></span>
+      </a>
+      <button id="menuToggle" class="menu-toggle" type="button" aria-label="Toggle navigation">☰</button>
+      <nav id="mainNav" class="main-nav">
+        <a href="#about">About</a><a href="#learning">Learning</a><a href="#courses">Courses</a>
+        <a href="#labs">Hack Lab</a><a href="#articles">Articles</a><a href="#community">Community</a>
+        <a href="#shop">Buy Hack</a><a href="#contact">Join</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="hero container">
+      <div>
+        <div class="eyebrow">RED CYBERSECURITY SOCIETY · EST. 2019</div>
+        <h1>Think like a <span>defender.</span><br>Build a safer digital world.</h1>
+        <p class="hero-copy">Learn cybersecurity ethically, build practical skills, explore authorized security labs, and connect with a community that believes in responsible technology.</p>
+        <div class="hero-actions"><a class="btn btn-primary" href="#courses">Explore learning ↗</a><a class="btn btn-secondary" href="#about">Discover REDCSS</a></div>
+      </div>
+      <div class="hero-visual" aria-label="REDCSS cybersecurity shield illustration">
+        <div class="hero-orbit"></div>
+        <div class="hero-shield"><svg viewBox="0 0 160 180" fill="none" stroke="currentColor" stroke-width="3"><path d="M80 8 143 31v48c0 43-26 72-63 93C43 151 17 122 17 79V31L80 8Z"/><path d="m48 88 21 21 44-48" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="float-tag tag-one">ETHICAL HACKING</span><span class="float-tag tag-two">DEFEND · LEARN</span><span class="float-tag tag-three">AUTHORIZED LABS</span>
+      </div>
+    </section>
+
+    <div class="ticker"><span>LEARN ETHICALLY　✦　PRACTICE RESPONSIBLY　✦　BUILD SECURE SYSTEMS　✦　SHARE KNOWLEDGE　✦　</span></div>
+
+    <section id="about" class="section container">
+      <div class="about-grid">
+        <div class="section-heading"><div class="section-kicker">WHO WE ARE</div><h2>Cybersecurity knowledge for a safer tomorrow.</h2><p>REDCSS is a community focused on cybersecurity education, practical learning, awareness, and responsible security research. Our goal is to help learners grow their skills while respecting systems, privacy, and the law.</p></div>
+        <div class="stats-grid"><div class="stat-card"><strong>2019</strong><span>Community journey began</span></div><div class="stat-card"><strong>Learn</strong><span>Build practical knowledge</span></div><div class="stat-card"><strong>Defend</strong><span>Promote safer digital spaces</span></div></div>
+      </div>
+    </section>
+
+    <section id="learning" class="section container">
+      <div class="section-heading"><div class="section-kicker">LEARNING PATHWAYS</div><h2>Build skills step by step.</h2><p>Start with the fundamentals and develop a strong defensive mindset.</p></div>
+      <div class="card-grid">
+        <article class="content-card"><div class="card-icon">⌘</div><h3>Network Security</h3><p>Understand networks, protocols, traffic analysis, and defensive monitoring.</p></article>
+        <article class="content-card"><div class="card-icon">◇</div><h3>Web Application Security</h3><p>Learn secure development, common web risks, and responsible testing in labs.</p></article>
+        <article class="content-card"><div class="card-icon">◎</div><h3>Cyber Safety</h3><p>Improve account security, privacy awareness, and protection against phishing.</p></article>
+      </div>
+    </section>
+
+    <section id="courses" class="section container">
+      <div class="section-heading"><div class="section-kicker">COURSES</div><h2>Learn with practical courses.</h2><p>Free and paid learning opportunities managed by the REDCSS team.</p></div>
+      <div id="courseGrid" class="card-grid">
+        <article class="featured-course"><span class="pill">FEATURED COURSE</span><h3>REDCSS Regular Cybersecurity Practical Course</h3><p class="section-copy">A practical cybersecurity learning program. Check back for course details and enrollment updates.</p><p class="muted">Duration: 3 months</p></article>
+      </div>
+    </section>
+
+    <section id="labs" class="section container">
+      <div class="section-heading"><div class="section-kicker">LIVE HACK LAB</div><h2>Practice in authorized environments.</h2><p>Explore safe CTF challenges and training labs. Only test systems where you have explicit permission.</p></div>
+      <div id="labGrid" class="card-grid"><p class="dynamic-empty">Practice labs will appear here when published by the admin.</p></div>
+    </section>
+
+    <section id="articles" class="section container">
+      <div class="section-heading"><div class="section-kicker">KNOWLEDGE HUB</div><h2>Latest articles & insights.</h2><p>Explore cybersecurity awareness, defensive techniques, and community learning resources.</p></div>
+      <div id="articleGrid" class="card-grid">
+        <article class="article-card"><div class="article-meta"><span>Awareness</span><span>REDCSS</span></div><h3>Understanding Social Engineering</h3><p>Learn how to recognize suspicious messages and protect your accounts.</p><a class="read-link" href="https://www.jageshwarkushwaha.com.np" target="_blank" rel="noopener">EXPLORE ARTICLE ↗</a></article>
+      </div>
+    </section>
+
+    <section id="shop" class="section container">
+      <div class="section-heading"><div class="section-kicker">BUY HACK</div><h2>Tools, equipment & security services.</h2><p>Discover legal cybersecurity tools, lab equipment, learning resources, and authorized security services.</p></div>
+      <div id="productGrid" class="card-grid"><p class="dynamic-empty">Products and tools will appear here when published by the admin.</p></div>
+      <div id="serviceGrid" class="card-grid" style="margin-top:18px"><p class="dynamic-empty">Cybersecurity services will appear here when published by the admin.</p></div>
+    </section>
+
+    <section id="community" class="section container">
+      <div class="section-heading"><div class="section-kicker">OUR COMMUNITY</div><h2>Grow together. Defend together.</h2><p>Meet learners, contributors, and responsible security enthusiasts.</p></div>
+      <div id="profileGrid" class="card-grid"><p class="dynamic-empty">Community profiles will appear here when published by the admin.</p></div>
+    </section>
+
+    <section id="dynamicSections" class="section container" hidden></section>
+    <section id="dynamicBanners" class="container" hidden></section>
+
+    <section id="contact" class="section container">
+      <div class="contact-wrap">
+        <div class="section-heading"><div class="section-kicker">GET INVOLVED</div><h2>Be part of the community.</h2><p>Have a question, want to collaborate, or interested in learning with REDCSS? Send us a message.</p></div>
+        <form id="contactForm" class="contact-form">
+          <input name="name" type="text" placeholder="Your name" autocomplete="name" required>
+          <input name="email" type="email" placeholder="Email address" autocomplete="email" required>
+          <input name="subject" type="text" placeholder="Subject" required>
+          <textarea name="message" placeholder="Your message" required></textarea>
+          <button class="btn btn-primary" type="submit">Send message ↗</button>
+          <p id="formStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-inner"><span>© <span id="year"></span> REDCSS Community. Learn ethically. Defend responsibly.</span><span>Built for cybersecurity education.</span></div></footer>
+
+  <script src="/app.js" defer></script>
+  <script>
+    // Safely render admin-managed content using textContent (never inject admin text as HTML).
+    (() => {
+      const $ = id => document.getElementById(id);
+      const make = (tag, cls, value) => {
+        const el = document.createElement(tag);
+        if (cls) el.className = cls;
+        if (value != null) el.textContent = value;
+        return el;
+      };
+      const safeLink = value => {
+        try {
+          const u = new URL(value, location.origin);
+          return ['http:', 'https:'].includes(u.protocol) ? u.href : '';
+        } catch { return ''; }
+      };
+      const getItems = async endpoint => {
+        const response = await fetch(endpoint);
+        if (!response.ok) throw new Error('Could not load content');
+        const data = await response.json();
+        return Array.isArray(data) ? data : (data.items || []);
+      };
+      const card = (item, kind) => {
+        const article = make('article', 'dynamic-card');
+        if (item.imageUrl || item.image) {
+          const src = safeLink(item.imageUrl || item.image);
+          if (src) {
+            const img = document.createElement('img');
+            img.src = src; img.alt = item.title || item.name || 'REDCSS';
+            img.loading = 'lazy'; article.append(img);
+          }
+        }
+        if (item.category || item.type || item.difficulty) article.append(make('span', 'pill', item.category || item.type || item.difficulty));
+        article.append(make('h3', '', item.title || item.name || 'REDCSS'));
+        if (item.duration) article.append(make('p', '', `Duration: ${item.duration}`));
+        if (item.price) article.append(make('p', '', `Price: ${item.price}`));
+        if (item.role) article.append(make('p', '', item.role));
+        article.append(make('p', '', item.description || item.bio || item.subtitle || ''));
+        if (Array.isArray(item.modules) && item.modules.length) article.append(make('p', '', `Modules: ${item.modules.join(' · ')}`));
+        if (Array.isArray(item.achievements) && item.achievements.length) article.append(make('p', '', `Achievements: ${item.achievements.join(' · ')}`));
+        if (item.instructions) article.append(make('p', '', item.instructions));
+        const href = safeLink(item.link || item.website);
+        if (href) {
+          const a = make('a', '', item.buttonText || (kind === 'labs' ? 'Open authorized lab ↗' : 'Learn more ↗'));
+          a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer'; article.append(a);
+        }
+        return article;
+      };
+      async function fill(endpoint, targetId, kind, emptyText) {
+        const target = $(targetId);
+        if (!target) return;
+        try {
+          const items = await getItems(endpoint);
+          const visible = items.filter(item => item.visible !== false && item.active !== false);
+          if (!visible.length) { target.replaceChildren(make('p', 'dynamic-empty', emptyText)); return; }
+          target.replaceChildren(...visible.map(item => card(item, kind)));
+        } catch { /* Existing fallback content remains visible if API is unavailable. */ }
+      }
+      async function loadDynamic() {
+        await Promise.all([
+          fill('/api/courses', 'courseGrid', 'courses', 'Courses will be announced soon.'),
+          fill('/api/labs', 'labGrid', 'labs', 'Authorized practice labs will be announced soon.'),
+          fill('/api/products', 'productGrid', 'products', 'Products will be announced soon.'),
+          fill('/api/services', 'serviceGrid', 'services', 'Services will be announced soon.'),
+          fill('/api/profiles', 'profileGrid', 'profiles', 'Community profiles will be announced soon.')
+        ]);
+        try {
+          const sections = await getItems('/api/sections');
+          const visible = sections.filter(x => x.visible !== false).sort((a,b)=>(a.order||0)-(b.order||0));
+          const wrap = $('dynamicSections');
+          if (visible.length && wrap) {
+            wrap.hidden = false;
+            visible.forEach(item => {
+              const section = make('section', 'section');
+              section.append(make('div', 'section-kicker', 'REDCSS COMMUNITY'));
+              section.append(make('h2', '', item.title || ''));
+              section.append(make('p', 'section-copy', item.subtitle || item.description || item.content || ''));
+              wrap.append(section);
+            });
+          }
+        } catch {}
+        try {
+          const banners = await getItems('/api/banners');
+          const visible = banners.filter(x => x.visible !== false).sort((a,b)=>(a.order||0)-(b.order||0));
+          const wrap = $('dynamicBanners');
+          if (visible.length && wrap) {
+            wrap.hidden = false;
+            visible.forEach(item => {
+              const block = make('div', 'featured-course');
+              block.append(make('div', 'section-kicker', 'ANNOUNCEMENT'));
+              block.append(make('h2', '', item.title || ''));
+              block.append(make('p', 'section-copy', item.subtitle || item.description || ''));
+              const href = safeLink(item.link);
+              if (href) { const a = make('a', 'btn btn-primary', item.buttonText || 'Explore ↗'); a.href=href; block.append(a); }
+              wrap.append(block);
+            });
+          }
+        } catch {}
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadDynamic);
+      else loadDynamic();
+    })();
+  </script>
+</body>
+</html>
