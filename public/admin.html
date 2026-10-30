@@ -1,1 +1,265 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>REDCSS Admin</title><link rel="stylesheet" href="/styles.css"></head><body><header class="site-header"><a class="brand" href="/"><span class="brand-mark"><svg viewBox="0 0 64 72"><path d="M32 3 57 13v21c0 16-10 27-25 35C17 61 7 50 7 34V13L32 3Z"/><path d="M22 39 32 21l10 18M25 34h14M27 46h10"/></svg></span><span class="brand-copy"><b>RED<span>CSS</span></b><small>ADMIN CONSOLE</small></span></a><a href="/" class="back-top">← VIEW WEBSITE</a></header><main class="section-wrap section-pad"><div class="section-kicker">PRIVATE AREA / ADMIN</div><h2>Community<br><span>management.</span></h2><section id="loginPanel" class="contact-form" style="max-width:520px;margin-top:35px"><h3>Administrator login</h3><label>Username<input id="username" autocomplete="username" value="admin"></label><label>Password<input id="password" type="password" autocomplete="current-password"></label><button class="btn btn-red" id="loginBtn">Sign in ↗</button><p id="loginStatus" class="form-status"></p></section><section id="dashboard" hidden style="margin-top:35px"><div class="heading-row"><h2>Inbox & posts</h2><button class="btn btn-ghost" id="logoutBtn">Sign out</button></div><div class="contact-grid" style="grid-template-columns:1fr 1fr;gap:20px"><form id="postForm" class="contact-form"><h3>Create an article</h3><label>Title<input name="title" required maxlength="180"></label><label>Category<input name="category" maxlength="60" placeholder="Web Security"></label><label>Short summary<textarea name="excerpt" rows="2" maxlength="400"></textarea></label><label>Article content<textarea name="content" rows="6" required maxlength="5000"></textarea></label><button class="btn btn-red">Publish article ↗</button><p id="postStatus" class="form-status"></p></form><div class="contact-form"><h3>Contact messages</h3><div id="messagesList" style="display:grid;gap:14px"></div></div></div><div class="contact-form" style="margin-top:20px"><h3>Published articles</h3><div id="postsList" style="display:grid;gap:12px"></div></div></section></main><script src="/admin.js" defer></script></body></html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#08090e">
+  <title>REDCSS | Control Center</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/admin.css">
+  <script src="/admin.js" defer></script>
+</head>
+<body class="admin-body">
+
+  <!-- LOGIN -->
+  <section id="loginPanel" class="login-screen">
+    <div class="login-card">
+      <a href="/" class="admin-logo">RED<span>CSS</span></a>
+      <div class="login-icon">🔐</div>
+      <p class="admin-eyebrow">SECURE ADMIN ACCESS</p>
+      <h1>Welcome <span>back.</span></h1>
+      <p class="login-description">Sign in to your community control center.</p>
+
+      <form id="loginForm">
+        <label for="username">Username</label>
+        <input id="username" value="admin" autocomplete="username" required>
+
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" placeholder="Admin password" required>
+
+        <button class="admin-primary-btn" id="loginBtn" type="submit">
+          Sign in to Dashboard ↗
+        </button>
+      </form>
+      <p id="loginStatus" class="admin-status"></p>
+      <a href="/" class="back-website">← Back to website</a>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <div id="adminApp" class="admin-layout" hidden>
+
+    <aside class="admin-sidebar">
+      <a href="/" class="admin-logo">RED<span>CSS</span></a>
+      <p class="sidebar-label">CONTROL CENTER</p>
+
+      <nav class="admin-nav">
+        <button class="nav-item active" data-view="overview">▦ <span>Overview</span></button>
+        <button class="nav-item" data-view="analytics">◉ <span>Analytics</span></button>
+        <button class="nav-item" data-view="messages">✉ <span>Messages</span><b id="navUnread">0</b></button>
+        <button class="nav-item" data-view="articles">▤ <span>Articles</span></button>
+        <button class="nav-item" data-view="create">＋ <span>Create Article</span></button>
+        <button class="nav-item" data-view="system">⌘ <span>System Monitor</span></button>
+        <button class="nav-item" data-view="security">♢ <span>Security</span></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="admin-profile">
+          <div class="profile-avatar">A</div>
+          <div>
+            <strong>Administrator</strong>
+            <small>Control Center</small>
+          </div>
+        </div>
+        <button id="logoutBtn" class="logout-btn">↪ Sign out</button>
+        <a href="/" class="website-link">↗ View website</a>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+
+      <header class="admin-topbar">
+        <div>
+          <p class="admin-eyebrow">REDCSS COMMUNITY / ADMIN</p>
+          <h2 id="pageTitle">Overview</h2>
+        </div>
+        <button id="refreshBtn" class="refresh-btn">↻ Refresh</button>
+      </header>
+
+      <!-- OVERVIEW -->
+      <section id="overviewView" class="admin-view">
+        <div class="welcome-banner">
+          <p class="admin-eyebrow">SYSTEM DASHBOARD</p>
+          <h1>Community <span>at a glance.</span></h1>
+          <p>Manage your community from one central place.</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <small>Total Articles</small>
+            <strong id="statPosts">—</strong>
+            <span>Published content</span>
+          </div>
+          <div class="stat-card">
+            <small>Total Messages</small>
+            <strong id="statMessages">—</strong>
+            <span>Contact inbox</span>
+          </div>
+          <div class="stat-card">
+            <small>Unread Messages</small>
+            <strong id="statUnread">—</strong>
+            <span>Needs attention</span>
+          </div>
+          <div class="stat-card">
+            <small>API Status</small>
+            <strong id="statStatus">—</strong>
+            <span>Service health</span>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <h3>Recent Activity</h3>
+          <div id="activityList" class="admin-empty">
+            Activity data will appear here.
+          </div>
+        </div>
+      </section>
+
+      <!-- ANALYTICS -->
+      <section id="analyticsView" class="admin-view" hidden>
+        <div class="welcome-banner">
+          <p class="admin-eyebrow">PERFORMANCE CENTER</p>
+          <h1>System <span>Analytics.</span></h1>
+          <p>Website performance and visitor insights.</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <small>Total Page Views</small>
+            <strong id="pageViews">—</strong>
+            <span>Tracking setup required</span>
+          </div>
+          <div class="stat-card">
+            <small>Unique Visitors</small>
+            <strong id="uniqueVisitors">—</strong>
+            <span>Tracking setup required</span>
+          </div>
+          <div class="stat-card">
+            <small>API Requests</small>
+            <strong id="apiRequests">—</strong>
+            <span>Monitoring setup required</span>
+          </div>
+          <div class="stat-card">
+            <small>Server Uptime</small>
+            <strong id="serverUptime">—</strong>
+            <span>Monitoring setup required</span>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <h3>Traffic Analytics</h3>
+          <div id="trafficChart" class="admin-empty">
+            Visitor tracking will be connected in the backend step.
+          </div>
+        </div>
+      </section>
+
+      <!-- MESSAGES -->
+      <section id="messagesView" class="admin-view" hidden>
+        <div class="welcome-banner">
+          <p class="admin-eyebrow">COMMUNITY INBOX</p>
+          <h1>Contact <span>Messages.</span></h1>
+          <p>Read and manage messages from your visitors.</p>
+        </div>
+        <div class="admin-panel">
+          <h3>All Messages</h3>
+          <div id="messagesList">
+            <div class="admin-empty">Loading messages...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ARTICLES -->
+      <section id="articlesView" class="admin-view" hidden>
+        <div class="welcome-banner">
+          <p class="admin-eyebrow">CONTENT MANAGEMENT</p>
+          <h1>Published <span>Articles.</span></h1>
+          <p>Manage your community articles.</p>
+        </div>
+        <div class="admin-panel">
+          <h3>All Articles</h3>
+          <div id="postsList">
+            <div class="admin-empty">Loading articles...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CREATE ARTICLE -->
+      <section id="createView" class="admin-view" hidden>
+        <div class="welcome-banner">
+          <p class="admin-eyebrow">CONTENT STUDIO</p>
+          <h1>Create <span>Article.</span></h1>
+          <p>Publish something valuable for the community.</p>
+        </div>
+
+        <form id="postForm" class="admin-form">
+          <h3>New Article</h3>
+
+          <label>Article Title</label>
+          <input name="title" maxlength="180" required placeholder="Enter article title">
+
+          <label>Category</label>
+          <input name="category" maxlength="60" placeholder="Cybersecurity">
+
+          <label>Short Summary</label>
+          <textarea name="excerpt" rows="3" maxlength="400" placeholder="Write a short summary"></textarea>
+
+          <label>Article Content</label>
+          <textarea name="content" rows="9" maxlength="5000" required placeholder="Write your article..."></textarea>
+
+          <button type="submit">Publish Article ↗</button>
+          <p id="postStatus" class="admin-status"></p>
+        </form>
+      </section>
+
+      <!-- SYSTEM MONITOR -->
+      <section id="systemView" class="admin-view" hidden>
+        <div class="welcome-banner">
+          <p class="admin-eyebrow">INFRASTRUCTURE</p>
+          <h1>System <span>Monitor.</span></h1>
+          <p>Monitor your website service health.</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <small>API Health</small>
+            <strong id="systemApi">—</strong>
+            <span>Health endpoint</span>
+          </div>
+          <div class="stat-card">
+            <small>Website</small>
+            <strong id="systemWebsite">—</strong>
+            <span>Frontend service</span>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <h3>Service Information</h3>
+          <p id="systemInfo">System information will load after login.</p>
+        </div>
+      </section>
+
+      <!-- SECURITY -->
+      <section id="securityView" class="admin-view" hidden>
+        <div class="welcome-banner">
+          <p class="admin-eyebrow">PROTECTION CENTER</p>
+          <h1>Security <span>Overview.</span></h1>
+          <p>Keep your community administration secure.</p>
+        </div>
+
+        <div class="admin-panel">
+          <h3>Security Checklist</h3>
+          <p>✓ Admin routes require authentication.</p>
+          <p>✓ API rate limiting is enabled.</p>
+          <p>✓ Security headers are enabled.</p>
+          <p>• Login audit history requires backend setup.</p>
+          <p>• Password change feature requires backend setup.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</body>
+  </html>
+  
