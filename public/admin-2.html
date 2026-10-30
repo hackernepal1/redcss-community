@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#09090d">
+  <title>REDCSS Admin Panel</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/admin.css">
+  <style>
+    :root{color-scheme:dark}
+    body.admin-page{background:#09090d;color:#f5f5f7;font-family:Arial,sans-serif;min-height:100vh}
+    .admin-wrap{width:min(1200px,94%);margin:32px auto}
+    .admin-login{max-width:430px;margin:9vh auto;padding:28px;background:#15151d;border:1px solid #33333d;border-radius:18px;box-shadow:0 20px 70px #0008}
+    .admin-login h1,.admin-top h1{margin:0 0 8px}
+    .admin-login p,.muted{color:#a5a5b3}
+    .admin-field{display:grid;gap:7px;margin:14px 0}
+    .admin-field label{font-size:13px;color:#c8c8d2}
+    .admin-field input,.admin-field textarea,.admin-field select{width:100%;padding:12px;border:1px solid #393944;border-radius:9px;background:#0d0d13;color:#fff;font:inherit}
+    .admin-field textarea{min-height:90px;resize:vertical}
+    .admin-btn,button{cursor:pointer}
+    .admin-btn, .admin-item button, .admin-form button{border:0;border-radius:9px;padding:10px 15px;background:#d51d36;color:white;font-weight:700}
+    .admin-btn:disabled{opacity:.6;cursor:wait}
+    .admin-shell{display:grid;grid-template-columns:220px minmax(0,1fr);gap:22px}
+    .admin-sidebar,.admin-main,.admin-panel{background:#14141c;border:1px solid #30303b;border-radius:15px}
+    .admin-sidebar{padding:15px;align-self:start;position:sticky;top:15px}
+    .admin-brand{font-weight:900;letter-spacing:2px;color:#ff4058;padding:10px 8px 18px}
+    .admin-nav{display:grid;gap:5px}
+    .admin-nav button{width:100%;text-align:left;padding:10px 12px;background:transparent;color:#d5d5de;border:0;border-radius:8px}
+    .admin-nav button.active,.admin-nav button:hover{background:#29202a;color:#fff}
+    .admin-nav .logout{margin-top:15px;color:#ff7787}
+    .admin-main{padding:22px;min-width:0}
+    .admin-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+    .admin-top button{padding:9px 13px;border-radius:8px;border:1px solid #454550;background:#20202a;color:#fff}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+    .stat-card{padding:17px;background:#1c1c26;border:1px solid #333340;border-radius:12px}
+    .stat-card span{display:block;color:#aaaab8;font-size:13px}
+    .stat-card strong{display:block;font-size:25px;margin-top:7px}
+    .admin-panel{padding:18px;margin:14px 0}
+    .admin-panel h2{font-size:19px;margin:0 0 14px}
+    .admin-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}
+    .admin-form .wide{grid-column:1/-1}
+    .admin-form button{justify-self:start;margin:8px 0 4px}
+    .admin-list{display:grid;gap:10px}
+    .admin-item{padding:14px;background:#1c1c26;border:1px solid #343440;border-radius:11px}
+    .admin-item h3{margin:0 0 8px;font-size:16px}
+    .admin-item p{color:#c2c2cd;overflow-wrap:anywhere}
+    .admin-item button{margin:8px 8px 0 0;padding:8px 11px}
+    .admin-item button+button{background:#454550}
+    .empty-state{color:#a6a6b2;padding:12px}
+    .success{color:#62df9a}.error{color:#ff7382}
+    [hidden]{display:none!important}
+    @media(max-width:800px){.admin-shell{grid-template-columns:1fr}.admin-sidebar{position:static}.admin-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:520px){.admin-main{padding:14px}.admin-form{grid-template-columns:1fr}.admin-form .wide{grid-column:auto}.admin-top{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body class="admin-page">
+  <section id="loginPanel" class="admin-login">
+    <div class="admin-brand">REDCSS COMMUNITY</div>
+    <h1>Admin Login</h1>
+    <p>Sign in to manage your community website.</p>
+    <form id="loginForm">
+      <div class="admin-field">
+        <label for="username">Username</label>
+        <input id="username" name="username" autocomplete="username" required>
+      </div>
+      <div class="admin-field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+      </div>
+      <button id="loginBtn" class="admin-btn" type="submit">Login</button>
+      <p id="loginStatus" role="status"></p>
+    </form>
+  </section>
+
+  <div id="adminApp" class="admin-wrap" hidden>
+    <div class="admin-shell">
+      <aside class="admin-sidebar">
+        <div class="admin-brand">REDCSS ADMIN</div>
+        <nav class="admin-nav" aria-label="Admin navigation">
+          <button class="nav-item active" data-view="overview">Overview</button>
+          <button class="nav-item" data-view="analytics">Analytics</button>
+          <button class="nav-item" data-view="articles">Articles</button>
+          <button class="nav-item" data-view="create">Create Article</button>
+          <button class="nav-item" data-view="courses">Courses</button>
+          <button class="nav-item" data-view="products">Products</button>
+          <button class="nav-item" data-view="services">Services</button>
+          <button class="nav-item" data-view="community">Community</button>
+          <button class="nav-item" data-view="labs">Live Hack Labs</button>
+          <button class="nav-item" data-view="sections">Homepage Sections</button>
+          <button class="nav-item" data-view="banners">Banners</button>
+          <button class="nav-item" data-view="messages">Messages <span id="navUnread">0</span></button>
+          <button class="nav-item" data-view="system">System</button>
+          <button class="nav-item" data-view="settings">Site Settings</button>
+          <button class="nav-item" data-view="security">Security</button>
+          <button id="logoutBtn" class="nav-item logout" type="button">Logout</button>
+        </nav>
+      </aside>
+
+      <main class="admin-main">
+        <header class="admin-top">
+          <div><h1 id="pageTitle">Overview</h1><p class="muted">Manage REDCSS Community content.</p></div>
+          <button id="refreshBtn" type="button">Refresh data</button>
+        </header>
+
+        <section id="view-overview" class="view" data-view-panel="overview">
+          <div class="stats-grid">
+            <div class="stat-card"><span>Articles</span><strong id="statPosts">0</strong></div>
+            <div class="stat-card"><span>Messages</span><strong id="statMessages">0</strong></div>
+            <div class="stat-card"><span>Unread messages</span><strong id="statUnread">0</strong></div>
+            <div class="stat-card"><span>API status</span><strong id="statStatus">—</strong></div>
+          </div>
+          <section class="admin-panel"><h2>Recent activity</h2><div id="activityList" class="admin-list"></div></section>
+        </section>
+
+        <section id="view-analytics" class="view" data-view-panel="analytics" hidden>
+          <section class="admin-panel"><h2>Analytics</h2><p class="muted">Visitor analytics are not connected yet. This panel does not display fabricated visitor counts.</p></section>
+        </section>
+
+        <section id="view-articles" class="view" data-view-panel="articles" hidden>
+          <section class="admin-panel"><h2>Published articles</h2><div id="postsList" class="admin-list"></div></section>
+        </section>
+
+        <section id="view-create" class="view" data-view-panel="create" hidden>
+          <section class="admin-panel">
+            <h2>Create article</h2>
+            <form id="postForm" class="admin-form">
+              <div class="admin-field"><label>Title</label><input name="title" required maxlength="160"></div>
+              <div class="admin-field"><label>Category</label><input name="category" required maxlength="60"></div>
+              <div class="admin-field wide"><label>Excerpt</label><textarea name="excerpt" maxlength="500"></textarea></div>
+              <div class="admin-field wide"><label>Article content</label><textarea name="content" required rows="7"></textarea></div>
+              <button type="submit">Publish article</button><p id="postStatus" class="wide" role="status"></p>
+            </form>
+          </section>
+        </section>
+
+        <section id="view-courses" class="view" data-view-panel="courses" hidden>
+          <section class="admin-panel">
+            <h2>Add course</h2>
+            <form id="courseForm" class="admin-form">
+              <div class="admin-field"><label>Course title</label><input name="title" required></div>
+              <div class="admin-field"><label>Duration</label><input name="duration" placeholder="e.g. 3 months"></div>
+              <div class="admin-field"><label>Course type</label><select name="type"><option value="free">Free</option><option value="paid">Paid</option></select></div>
+              <div class="admin-field"><label>Price (optional)</label><input name="price"></div>
+              <div class="admin-field wide"><label>Description</label><textarea name="description"></textarea></div>
+              <div class="admin-field wide"><label>Modules (one per line)</label><textarea name="modules" placeholder="Module 1&#10;Module 2"></textarea></div>
+              <div class="admin-field"><label><input type="checkbox" name="active" checked> Active course</label></div>
+              <button type="submit">Save course</button><p id="courseStatus" class="wide" role="status"></p>
+            </form>
+          </section>
+          <section class="admin-panel"><h2>Courses</h2><div id="coursesList" class="admin-list"></div></section>
+        </section>
+
+        <section id="view-products" class="view" data-view-panel="products" hidden>
+          <section class="admin-panel"><h2>Add legal product / tool</h2>
+            <form id="productForm" class="admin-form">
+              <div class="admin-field"><label>Product name</label><input name="title" required></div>
+              <div class="admin-field"><label>Category</label><input name="category"></div>
+              <div class="admin-field"><label>Price</label><input name="price"></div>
+              <div class="admin-field"><label>Image URL</label><input name="imageUrl" type="url"></div>
+              <div class="admin-field wide"><label>Description</label><textarea name="description"></textarea></div>
+              <div class="admin-field wide"><label>Product link</label><input name="link" type="url"></div>
+              <div class="admin-field"><label><input type="checkbox" name="visible" checked> Visible on website</label></div>
+              <button type="submit">Add product</button><p id="productStatus" class="wide" role="status"></p>
+            </form>
+          </section>
+          <section class="admin-panel"><h2>Products</h2><div id="productsList" class="admin-list"></div></section>
+        </section>
+
+        <section id="view-services" class="view" data-view-panel="services" hidden>
+          <section class="admin-panel"><h2>Add service</h2>
+            <form id="serviceForm" class="admin-form">
+              <div class="admin-field"><label>Service title</label><input name="title" required></div>
+              <div class="admin-field"><label>Category</label><input name="category"></div>
+              <div class="admin-field"><label>Image URL</label><input name="imageUrl" type="url"></div>
+              <div class="admin-field"><label>Button text</label><input name="buttonText"></div>
+              <div class="admin-field wide"><label>Description</label><textarea name="description"></textarea></div>
+              <div class="admin-field wide"><label>Service link</label><input name="link" type="url"></div>
+              <div class="admin-field"><label><input type="checkbox" name="visible" checked> Visible on website</label></div>
+              <button type="submit">Add service</button><p id="serviceStatus" class="wide" role="status"></p>
+            </form>
+          </section>
+          <section class="admin-panel"><h2>Services</h2><div id="servicesList" class="admin-list"></div></section>
+        </section>
+
+        <section id="view-community" class="view" data-view-panel="community" hidden>
+          <section class="admin-panel"><h2>Add community profile</h2>
+            <form id="profileForm" class="admin-form">
+              <div class="admin-field"><label>Name</label><input name="name" required></div>
+              <div class="admin-field"><label>Role</label><input name="role"></div>
+              <div class="admin-field"><label>Image URL</label><input name="imageUrl" type="url"></div>
+              <div class="admin-field"><label>Website</label><input name="website" type="url"></div>
+              <div class="admin-field wide"><label>Bio</label><textarea name="bio"></textarea></div>
+              <div class="admin-field wide"><label>Achievements (one per line)</label><textarea name="achievements"></textarea></div>
+              <div class="admin-field"><label><input type="checkbox" name="visible" checked> Visible on website</label></div>
+              <button type="submit">Add profile</button><p id="profileStatus" class="wide" role="status"></p>
+            </form>
+          </section>
+          <section class="admin-panel"><h2>Community profiles</h2><div id="profilesList" class="admin-list"></div></section>
+        </section>
+
+        <section id="view-labs" class="view" data-view-panel="labs" hidden>
+          <section class="admin-panel"><h2>Add authorized practice lab / CTF</h2>
+            <form id="labForm" class="admin-form">
+              <div class="admin-field"><label>Lab title</label><input name="title" required></div>
+              <div class="admin-field"><label>Difficulty</label><select name="difficulty"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></div>
+              <div class="admin-field"><label>Category</label><input name="category"></div>
+              <div class="admin-field"><label>Lab link</label><input name="link" type="url"></div>
+              <div class="admin-field wide"><label>Description</label><textarea name="description"></textarea></div>
+              <div class="admin-field wide"><label>Instructions</label><textarea name="instructions"></textarea></div>
+              <div class="admin-field"><label><input type="checkbox" name="visible" checked> Visible on website</label></div>
+              <button type="submit">Add lab</button><p id="labStatus" class="wide" role="status"></p>
+            </form>
+          </section>
+          <section class="admin-panel"><h2>Practice labs</h2><div id="labsList" class="admin-list"></div></section>
+        </section>
+
+        <section id="view-sections" class="view" data-view-panel="sections" hidden>
+          <section class="admin-panel"><h2>Add / manage homepage section</h2>
+            <form id="sectionForm" class="admin-form">
+              <div class="admin-field"><label>Section title</label><input name="title" required></div>
+              <div class="admin-field"><label>Subtitle</label><input name="subtitle"></div>
+              <div class="admin-field"><label>Image URL</label><input name="imageUrl" type="url"></div>
+              <div class="admin-field"><label>Button text</label><input name="buttonText"></div>
+              <div class="admin-field wide"><label>Description</label><textarea name="description"></textarea></div>
+              <div class="admin-field wide"><label>Content</label><textarea name="content"></textarea></div>
+              <div class="admin-field"><label>Link</label><input name="link" type="url"></div>
+              <div class="admin-field"><label>Display order</label><input name="order" type="number" min="0"></div>
+              <div class="admin-field"><label><input type="checkbox" name="visible" checked> Visible on website</label></div>
+              <button type="submit">Add section</button><p id="sectionStatus" class="wide" role="status"></p>
+            </form>
+          </section>
+          <section class="admin-panel"><h2>Homepage sections</h2><div id="sectionsList" class="admin-list"></div></section>
+        </section>
+
+        <section id="view-banners" class="view" data-view-panel="banners" hidden>
+          <section class="admin-panel"><h2>Add banner</h2>
+            <form id="bannerForm" class="admin-form">
+              <div class="admin-field"><label>Banner title</label><input name="title" required></div>
+              <div class="admin-field"><label>Subtitle</label><input name="subtitle"></div>
+              <div class="admin-field"><label>Image URL</label><input name="imageUrl" type="url"></div>
+              <div class="admin-field"><label>Button text</label><input name="buttonText"></div>
+              <div class="admin-field wide"><label>Description</label><textarea name="description"></textarea></div>
+              <div class="admin-field"><label>Link</label><input name="link" type="url"></div>
+              <div class="admin-field"><label>Display order</label><input name="order" type="number" min="0"></div>
+              <div class="admin-field"><label><input type="checkbox" name="visible" checked> Visible on website</label></div>
+              <button type="submit">Add banner</button><p id="bannerStatus" class="wide" role="status"></p>
+            </form>
+          </section>
+          <section class="admin-panel"><h2>Banners</h2><div id="bannersList" class="admin-list"></div></section>
+        </section>
+
+        <section id="view-messages" class="view" data-view-panel="messages" hidden>
+          <section class="admin-panel"><h2>Contact messages</h2><div id="messagesList" class="admin-list"></div></section>
+        </section>
+
+        <section id="view-system" class="view" data-view-panel="system" hidden>
+          <section class="admin-panel"><h2>System status</h2><p>API: <strong id="systemApi">—</strong></p><p>Website: <strong id="systemWebsite">—</strong></p><p id="systemInfo" class="muted"></p></section>
+        </section>
+
+        <section id="view-settings" class="view" data-view-panel="settings" hidden>
+          <section class="admin-panel"><h2>Website settings</h2>
+            <form id="settingsForm" class="admin-form">
+              <div class="admin-field"><label>Site name</label><input name="siteName"></div>
+              <div class="admin-field"><label>Tagline</label><input name="tagline"></div>
+              <div class="admin-field"><label>Logo URL</label><input name="logo" type="url"></div>
+              <div class="admin-field"><label>Contact email</label><input name="email" type="email"></div>
+              <div class="admin-field"><label>Phone</label><input name="phone"></div>
+              <div class="admin-field"><label>Address</label><input name="address"></div>
+              <div class="admin-field"><label>Facebook URL</label><input name="facebook" type="url"></div>
+              <div class="admin-field"><label>Instagram URL</label><input name="instagram" type="url"></div>
+              <div class="admin-field"><label>YouTube URL</label><input name="youtube" type="url"></div>
+              <div class="admin-field"><label>LinkedIn URL</label><input name="linkedin" type="url"></div>
+              <div class="admin-field wide"><label>Announcement</label><textarea name="announcement"></textarea></div>
+              <button type="submit">Save settings</button><p id="settingsStatus" class="wide" role="status"></p>
+            </form>
+          </section>
+        </section>
+
+        <section id="view-security" class="view" data-view-panel="security" hidden>
+          <section class="admin-panel"><h2>Security notes</h2><p class="muted">Keep ADMIN_USERNAME, ADMIN_PASSWORD and JWT_SECRET in Render environment variables. Never publish secrets in GitHub. Use only authorized training labs and CTF targets.</p></section>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="/admin.js" defer></script>
+</body>
+</html>
