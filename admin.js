@@ -1,0 +1,12 @@
+let token='';
+const el=id=>document.getElementById(id);
+async function api(url,options={}){const r=await fetch(url,{...options,headers:{'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`}:{}) ,...(options.headers||{})}});const data=await r.json();if(!r.ok)throw new Error(data.error||'Request failed');return data;}
+function node(tag,text){const n=document.createElement(tag);n.textContent=text;return n;}
+async function loadDashboard(){const [messages,posts]=await Promise.all([api('/api/admin/messages'),api('/api/posts')]);const ml=el('messagesList'),pl=el('postsList');ml.innerHTML='';pl.innerHTML='';
+ if(!messages.length)ml.append(node('p','No messages yet.'));
+ messages.forEach(m=>{const box=document.createElement('div');box.style.cssText='border-bottom:1px solid #343741;padding:10px 0';box.append(node('b',`${m.name} · ${m.status}`),node('p',`${m.email} | ${new Date(m.createdAt).toLocaleString()}`),node('p',m.subject||'No subject'),node('p',m.message));if(m.status!=='read'){const b=node('button','Mark as read');b.className='btn btn-ghost';b.onclick=async()=>{await api(`/api/admin/messages/${m.id}`,{method:'PATCH',body:JSON.stringify({status:'read'})});loadDashboard()};box.append(b)}ml.append(box)});
+ posts.forEach(p=>{const row=document.createElement('div');row.style.cssText='display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid #343741;padding:10px 0';row.append(node('span',p.title));const b=node('button','Delete');b.className='btn btn-ghost';b.onclick=async()=>{if(confirm('Delete this article?')){await api(`/api/admin/posts/${p.id}`,{method:'DELETE'});loadDashboard()}};row.append(b);pl.append(row)});
+}
+el('loginBtn').onclick=async()=>{el('loginStatus').textContent='Signing in…';try{const data=await api('/api/admin/login',{method:'POST',body:JSON.stringify({username:el('username').value,password:el('password').value})});token=data.token;el('loginPanel').hidden=true;el('dashboard').hidden=false;await loadDashboard()}catch(e){el('loginStatus').textContent=e.message}};
+el('logoutBtn').onclick=()=>{token='';el('dashboard').hidden=true;el('loginPanel').hidden=false;el('password').value=''};
+el('postForm').onsubmit=async e=>{e.preventDefault();const status=el('postStatus');try{const data=Object.fromEntries(new FormData(e.currentTarget));await api('/api/admin/posts',{method:'POST',body:JSON.stringify(data)});e.currentTarget.reset();status.textContent='Article published.';loadDashboard()}catch(err){status.textContent=err.message}};
