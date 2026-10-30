@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08090d">
+<title>REDCSS Admin Control Center</title>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/admin.css">
+<style>
+.admin-extra-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:20px}
+.admin-extra-card{padding:20px;border:1px solid rgba(255,255,255,.1);border-radius:16px;background:rgba(255,255,255,.035)}
+.admin-extra-card h3{margin:0 0 8px;color:#fff}.admin-extra-card p{color:#aaa;font-size:13px;line-height:1.6}
+.admin-form{display:grid;gap:14px;max-width:700px}
+.admin-form input,.admin-form textarea,.admin-form select{width:100%;padding:13px;color:#fff;background:#11131a;border:1px solid rgba(255,255,255,.13);border-radius:9px;outline:none}
+.admin-form textarea{min-height:110px;resize:vertical}.admin-form label{color:#ddd;font-size:13px}
+.admin-form button,.admin-action-btn{padding:12px 18px;color:#fff;background:#d7193f;border:0;border-radius:9px;cursor:pointer}
+.admin-form button:hover,.admin-action-btn:hover{background:#f02b52}
+.admin-list{display:grid;gap:14px;margin-top:18px}.admin-status{color:#ff667f;font-size:13px}
+.admin-section-heading{margin:25px 0 15px}.admin-section-heading p{color:#999;font-size:13px}
+.admin-view[hidden],[hidden]{display:none!important}
+@media(max-width:700px){.admin-extra-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="admin-body">
+<section class="admin-login" id="loginPanel">
+<div class="admin-login-box admin-panel">
+<div class="admin-brand"><h1>RED<span>CSS</span></h1><p>COMMUNITY CONTROL CENTER</p></div>
+<h2>Admin Login</h2><p>Sign in to manage your community website.</p>
+<form id="loginForm" class="admin-form">
+<label for="username">Username</label><input id="username" type="text" placeholder="Admin username" autocomplete="username" required>
+<label for="password">Password</label><input id="password" type="password" placeholder="Enter password" autocomplete="current-password" required>
+<button id="loginBtn" type="submit">Sign in to Dashboard ↗</button><p id="loginStatus" class="admin-status" aria-live="polite"></p>
+</form></div></section>
+<div class="admin-app" id="adminApp" hidden>
+<aside class="admin-sidebar">
+<div class="admin-brand"><h2>RED<span>CSS</span></h2><small>ADMIN CONTROL CENTER</small></div>
+<nav class="admin-navigation">
+<p class="admin-nav-label">DASHBOARD</p>
+<button class="nav-item active" data-view="overview">◈ Overview</button><button class="nav-item" data-view="analytics">◉ Analytics</button>
+<p class="admin-nav-label">CONTENT MANAGEMENT</p>
+<button class="nav-item" data-view="articles">▤ Articles</button><button class="nav-item" data-view="create">＋ Create Article</button>
+<button class="nav-item" data-view="courses">▣ Courses</button><button class="nav-item" data-view="products">◈ Products &amp; Tools</button>
+<button class="nav-item" data-view="services">◉ Services</button><button class="nav-item" data-view="community">◎ Community</button>
+<button class="nav-item" data-view="labs">⌘ Live Hack Lab</button><button class="nav-item" data-view="sections">▤ Homepage Sections</button>
+<button class="nav-item" data-view="banners">▣ Banners</button>
+<p class="admin-nav-label">COMMUNICATION</p><button class="nav-item" data-view="messages">✉ Messages <span id="navUnread">0</span></button>
+<p class="admin-nav-label">SYSTEM</p><button class="nav-item" data-view="system">◉ System Monitor</button>
+<button class="nav-item" data-view="settings">⚙ Website Settings</button><button class="nav-item" data-view="security">◈ Security Center</button>
+</nav>
+<div class="admin-sidebar-bottom"><button id="refreshBtn" class="admin-action-btn">↻ Refresh</button><button id="logoutBtn" class="admin-logout">⇥ Logout</button></div>
+</aside>
+<main class="admin-main">
+<header class="admin-topbar"><div><p>REDCSS / ADMIN</p><h1 id="pageTitle">Overview</h1></div><div class="admin-topbar-status"><span>●</span> Control Center</div></header>
+<section class="admin-view" id="overviewView">
+<div class="admin-section-heading"><h2>Dashboard Overview</h2><p>Manage and monitor your REDCSS Community website.</p></div>
+<div class="admin-stats-grid">
+<div class="admin-panel"><p>Total Articles</p><h2 id="statPosts">0</h2></div><div class="admin-panel"><p>Total Messages</p><h2 id="statMessages">0</h2></div>
+<div class="admin-panel"><p>Unread Messages</p><h2 id="statUnread">0</h2></div><div class="admin-panel"><p>Website Status</p><h2 id="statStatus">Loading</h2></div></div>
+<div class="admin-panel"><h2>Recent Activity</h2><div id="activityList">Loading activity...</div></div>
+<div class="admin-section-heading"><h2>Quick Management</h2><p>Open a section to manage your website content.</p></div>
+<div class="admin-extra-grid"><div class="admin-extra-card"><h3>Courses</h3><p>Manage free and paid cybersecurity courses.</p></div>
+<div class="admin-extra-card"><h3>Products</h3><p>Manage legal cybersecurity tools and lab equipment.</p></div>
+<div class="admin-extra-card"><h3>Services</h3><p>Manage cybersecurity services and offerings.</p></div>
+<div class="admin-extra-card"><h3>Live Hack Lab</h3><p>Manage authorized CTF and sandbox challenges.</p></div></div>
+</section>
+<section class="admin-view" id="analyticsView" hidden><div class="admin-panel"><h2>Website Analytics</h2><p id="pageViews">Not tracked</p><p id="uniqueVisitors">Not tracked</p><p id="apiRequests">Not tracked</p><p id="serverUptime">Not tracked</p></div><div class="admin-panel"><h2>Traffic Overview</h2><div id="trafficChart">Visitor analytics will appear here after tracking is configured.</div></div></section>
+<section class="admin-view" id="messagesView" hidden><div class="admin-panel"><h2>Contact Messages</h2><p>Read messages received from website visitors.</p><div id="messagesList" class="admin-list"></div></div></section>
+<section class="admin-view" id="articlesView" hidden><div class="admin-panel"><h2>Published Articles</h2><p>Create and manage cybersecurity articles.</p><div id="postsList" class="admin-list"></div></div></section>
+<section class="admin-view" id="createView" hidden><div class="admin-panel"><h2>Create New Article</h2><form id="postForm" class="admin-form">
+<label for="postTitle">Article Title</label><input id="postTitle" name="title" placeholder="Article title" maxlength="180" required>
+<label for="postCategory">Category</label><input id="postCategory" name="category" placeholder="Web Security" maxlength="80" required>
+<label for="postExcerpt">Short Description</label><textarea id="postExcerpt" name="excerpt" placeholder="Short article summary" maxlength="500"></textarea>
+<label for="postContent">Article Content</label><textarea id="postContent" name="content" placeholder="Write your article..." maxlength="10000" required></textarea>
+<button type="submit">Publish Article ↗</button><p id="postStatus" class="admin-status" aria-live="polite"></p></form></div></section>
+<section class="admin-view" id="coursesView" hidden><div class="admin-panel"><h2>Course Management</h2><p>Create free and paid cybersecurity learning programs.</p><form id="courseForm" class="admin-form">
+<label>Course Title</label><input name="title" required maxlength="180"><label>Duration</label><input name="duration" placeholder="3 months" required>
+<label>Description</label><textarea name="description" required></textarea><label>Course Type</label><select name="type" required><option value="free">Free Course</option><option value="paid">Paid Course</option></select>
+<label>Modules (one per line)</label><textarea name="modules" placeholder="Network Security&#10;Web Security"></textarea><label><input type="checkbox" name="active" checked> Active course</label>
+<button type="submit">Add Course</button><p id="courseStatus" class="admin-status"></p></form></div><div class="admin-panel"><h2>Existing Courses</h2><div id="coursesList" class="admin-list"></div></div></section>
+<section class="admin-view" id="productsView" hidden><div class="admin-panel"><h2>Products &amp; Cybersecurity Tools</h2><p>Manage legal tools, hardware and lab equipment.</p><form id="productForm" class="admin-form">
+<label>Product Name</label><input name="title" required><label>Category</label><input name="category" placeholder="Lab Equipment"><label>Description</label><textarea name="description" required></textarea>
+<label>Price</label><input name="price" placeholder="NPR 1500"><label>Image URL</label><input name="imageUrl" type="url" placeholder="https://..."><label>Product Link</label><input name="link" type="url" placeholder="https://..."><label>Button Text</label><input name="buttonText" placeholder="View Product">
+<button type="submit">Add Product</button><p id="productStatus" class="admin-status"></p></form></div><div class="admin-panel"><h2>Existing Products</h2><div id="productsList" class="admin-list"></div></div></section>
+<section class="admin-view" id="servicesView" hidden><div class="admin-panel"><h2>Service Management</h2><form id="serviceForm" class="admin-form">
+<label>Service Name</label><input name="title" required><label>Category</label><input name="category"><label>Description</label><textarea name="description" required></textarea>
+<label>Image URL</label><input name="imageUrl" type="url"><label>Service Link</label><input name="link" type="url"><label>Button Text</label><input name="buttonText">
+<button type="submit">Add Service</button><p id="serviceStatus" class="admin-status"></p></form></div><div class="admin-panel"><h2>Existing Services</h2><div id="servicesList" class="admin-list"></div></div></section>
+<section class="admin-view" id="communityView" hidden><div class="admin-panel"><h2>Community Profiles</h2><form id="profileForm" class="admin-form">
+<label>Member Name</label><input name="name" required><label>Role</label><input name="role"><label>Biography</label><textarea name="bio"></textarea>
+<label>Profile Image URL</label><input name="imageUrl" type="url"><label>Website</label><input name="website" type="url"><label>Achievements</label><textarea name="achievements"></textarea>
+<button type="submit">Add Profile</button><p id="profileStatus" class="admin-status"></p></form></div><div class="admin-panel"><h2>Community Members</h2><div id="profilesList" class="admin-list"></div></div></section>
+<section class="admin-view" id="labsView" hidden><div class="admin-panel"><h2>Live Hack Lab</h2><p>Only create authorized CTF and isolated sandbox exercises.</p><form id="labForm" class="admin-form">
+<label>Challenge Title</label><input name="title" required><label>Description</label><textarea name="description" required></textarea><label>Difficulty</label><select name="difficulty"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select>
+<label>Category</label><input name="category" placeholder="Web Security"><label>Instructions</label><textarea name="instructions"></textarea><label>Authorized Lab Link</label><input name="link" type="url">
+<button type="submit">Add Lab Challenge</button><p id="labStatus" class="admin-status"></p></form></div><div class="admin-panel"><h2>Existing Challenges</h2><div id="labsList" class="admin-list"></div></div></section>
+<section class="admin-view" id="sectionsView" hidden><div class="admin-panel"><h2>Homepage Sections</h2><form id="sectionForm" class="admin-form">
+<label>Section Title</label><input name="title" required><label>Subtitle</label><input name="subtitle"><label>Description</label><textarea name="description"></textarea><label>Image URL</label><input name="imageUrl" type="url"><label>Link</label><input name="link" type="url"><label>Button Text</label><input name="buttonText">
+<button type="submit">Add Homepage Section</button><p id="sectionStatus" class="admin-status"></p></form></div><div class="admin-panel"><h2>Existing Sections</h2><div id="sectionsList" class="admin-list"></div></div></section>
+<section class="admin-view" id="bannersView" hidden><div class="admin-panel"><h2>Website Banners</h2><form id="bannerForm" class="admin-form">
+<label>Banner Title</label><input name="title" required><label>Subtitle</label><input name="subtitle"><label>Description</label><textarea name="description"></textarea><label>Banner Image URL</label><input name="imageUrl" type="url"><label>Link</label><input name="link" type="url"><label>Button Text</label><input name="buttonText">
+<button type="submit">Add Banner</button><p id="bannerStatus" class="admin-status"></p></form></div><div class="admin-panel"><h2>Existing Banners</h2><div id="bannersList" class="admin-list"></div></div></section>
+<section class="admin-view" id="systemView" hidden><div class="admin-panel"><h2>System Monitor</h2><p>API Status: <strong id="systemApi">Checking</strong></p><p>Website: <strong id="systemWebsite">Checking</strong></p><p id="systemInfo">Loading system information...</p></div></section>
+<section class="admin-view" id="settingsView" hidden><div class="admin-panel"><h2>Website Settings</h2><p>Update website identity and contact information.</p><form id="settingsForm" class="admin-form">
+<label>Website Name</label><input name="siteName" placeholder="REDCSS Community"><label>Tagline</label><input name="tagline"><label>Logo URL</label><input name="logo" type="url">
+<label>Contact Email</label><input name="email" type="email"><label>Phone</label><input name="phone"><label>Address</label><input name="address">
+<label>Facebook URL</label><input name="facebook" type="url"><label>Instagram URL</label><input name="instagram" type="url"><label>YouTube URL</label><input name="youtube" type="url"><label>LinkedIn URL</label><input name="linkedin" type="url">
+<label>Announcement</label><textarea name="announcement"></textarea><button type="submit">Save Website Settings</button><p id="settingsStatus" class="admin-status"></p></form></div></section>
+<section class="admin-view" id="securityView" hidden><div class="admin-panel"><h2>Security Center</h2><p>Admin authentication is protected by JWT.</p><p>Login attempts are rate limited.</p><p>Management APIs require admin authentication.</p><p>Use strong environment variables and keep all credentials outside your source code.</p></div></section>
+</main></div>
+<script src="/admin.js"></script>
+</body>
+</html>
